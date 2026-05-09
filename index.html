@@ -117,11 +117,19 @@
   background: #111827;
   border: 1px solid #111827;
   border-radius: 14px;
-  padding: 12px;
+  padding: 13px;
   text-align: center;
   font-weight: bold;
   color: #ffffff;
   margin-top: 14px;
+}
+
+.price-box small {
+  display: block;
+  margin-top: 5px;
+  font-size: 0.85rem;
+  font-weight: normal;
+  color: #d1d5db;
 }
 
     .legend {
@@ -318,7 +326,32 @@
 .floating-reserve-bar.hidden {
   display: none;
 }
-    
+    .copy-account-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  background: #f3f4f6;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  padding: 10px;
+  margin: 8px 0;
+}
+
+.copy-account-row strong {
+  word-break: break-all;
+}
+
+.copy-button {
+  border: 0;
+  border-radius: 10px;
+  background: #111827;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 9px 12px;
+  cursor: pointer;
+  white-space: nowrap;
+}
     .hidden {
       display: none;
     }
@@ -381,17 +414,17 @@
 </section>
 
     <section id="finalSection" class="card hidden">
-      <h2>Reserva registrada</h2>
-      <p><strong>Tu reserva queda pendiente hasta confirmar el pago por WhatsApp.</strong></p>
+  <h2>Resumen de tu reserva</h2>
+  <p><strong>Tu reserva quedó registrada. Ahora realiza el pago y adjunta el comprobante por WhatsApp.</strong></p>
 
-      <div id="reservationSummary"></div>
+  <div id="reservationSummary"></div>
 
-      <h2 style="margin-top:16px;">Datos de pago</h2>
-      <div id="paymentAccounts"></div>
+  <h2 style="margin-top:16px;">Datos de pago</h2>
+  <div id="paymentAccounts"></div>
 
-      <button id="whatsappButton" class="button" type="button">Enviar comprobante por WhatsApp</button>
-      <button id="newReservationButton" class="button secondary" type="button">Hacer otra reserva</button>
-    </section>
+  <button id="whatsappButton" class="button" type="button">Adjuntar pago por WhatsApp</button>
+  <button id="newReservationButton" class="button secondary" type="button">Hacer otra reserva</button>
+</section>
   </main>
 
   <script>
@@ -457,7 +490,7 @@ reserveButton: document.getElementById("reserveButton"),
       try {
         const data = JSON.parse(cached);
         applyData(data);
-        showStatus("Mostrando última información guardada. Actualiza en unos segundos.");
+        hideStatus();
       } catch (error) {
         localStorage.removeItem(CACHE_KEY);
       }
@@ -481,7 +514,7 @@ reserveButton: document.getElementById("reserveButton"),
         localStorage.setItem(CACHE_KEY, JSON.stringify(data));
         hideStatus();
       } catch (error) {
-        showStatus("Mostrando última información guardada. Actualiza en unos segundos.");
+        hideStatus();
       }
     }
 
@@ -501,12 +534,16 @@ reserveButton: document.getElementById("reserveButton"),
       const description = cfg.raffle_description || "Selecciona tus números, confirma tu reserva y envía el comprobante por WhatsApp.";
       const price = cfg.ticket_price || "2";
       const currency = cfg.currency || "USD";
-      const imagePath = cfg.main_image_path || "assets/rifa.jpg";
+      const imagePath = cfg.main_image_path || "/rifa.jepg";
+      const raffleDate = cfg.raffle_date || "Fecha del sorteo: por definir";
 
       document.title = title;
       els.title.textContent = title;
       els.description.textContent = description;
-      els.priceBox.textContent = `Precio por número: ${price} ${currency}`;
+      els.priceBox.innerHTML = `
+  <div>Precio por número: ${price} ${currency}</div>
+  <small>${escapeHtml(raffleDate)}</small>
+`;
       els.image.src = imagePath;
       els.image.alt = title;
     }
@@ -696,21 +733,41 @@ els.finalSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function renderPaymentAccounts() {
-      if (!state.accounts.length) {
-        els.paymentAccounts.innerHTML = "<p class='muted'>No hay cuentas de pago activas.</p>";
-        return;
-      }
+  if (!state.accounts.length) {
+    els.paymentAccounts.innerHTML = "<p class='muted'>No hay cuentas de pago activas.</p>";
+    return;
+  }
 
-      els.paymentAccounts.innerHTML = state.accounts.map(account => `
-        <div class="account">
-          <p><strong>${escapeHtml(account.banco || "")}</strong></p>
-          <p>Tipo de cuenta: ${escapeHtml(account.tipo_cuenta || "")}</p>
-          <p>Número de cuenta: <strong>${escapeHtml(account.numero_cuenta || "")}</strong></p>
-          <p>Titular: ${escapeHtml(account.titular || "")}</p>
-          ${account.identificacion ? `<p>Identificación: ${escapeHtml(account.identificacion)}</p>` : ""}
+  els.paymentAccounts.innerHTML = state.accounts.map((account, index) => `
+    <div class="account">
+      <p><strong>${escapeHtml(account.banco || "")}</strong></p>
+      <p>Tipo de cuenta: ${escapeHtml(account.tipo_cuenta || "")}</p>
+
+      <div class="copy-account-row">
+        <div>
+          <span>Número de cuenta</span><br>
+          <strong>${escapeHtml(account.numero_cuenta || "")}</strong>
         </div>
-      `).join("");
-    }
+        <button class="copy-button" type="button" data-copy="${escapeHtml(account.numero_cuenta || "")}">
+          Copiar
+        </button>
+      </div>
+
+      <p>Titular: ${escapeHtml(account.titular || "")}</p>
+      ${account.identificacion ? `<p>Identificación: ${escapeHtml(account.identificacion)}</p>` : ""}
+    </div>
+  `).join("");
+
+  document.querySelectorAll(".copy-button").forEach(button => {
+    button.addEventListener("click", () => {
+      copyToClipboard(button.dataset.copy || "");
+      button.textContent = "Copiado";
+      setTimeout(() => {
+        button.textContent = "Copiar";
+      }, 1600);
+    });
+  });
+}
 
     function openWhatsappProof() {
       const reservation = state.lastReservation;
@@ -736,6 +793,20 @@ els.finalSection.scrollIntoView({ behavior: "smooth", block: "start" });
   window.scrollTo({ top: 0, behavior: "smooth" });
 }
 
+function copyToClipboard(text) {
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(text);
+    return;
+  }
+
+  const tempInput = document.createElement("input");
+  tempInput.value = text;
+  document.body.appendChild(tempInput);
+  tempInput.select();
+  document.execCommand("copy");
+  document.body.removeChild(tempInput);
+}
+    
     function formatMoney(value) {
       return Number(value || 0).toFixed(2);
     }
