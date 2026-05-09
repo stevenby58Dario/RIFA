@@ -774,7 +774,7 @@ els.finalSection.scrollIntoView({ behavior: "smooth", block: "start" });
       if (!reservation) return;
 
       const adminWhatsapp = state.config.whatsapp_number || "593994827767";
-      const message = `Hola, reservé los números ${reservation.numbers.join(", ")} para la rifa.\nMi nombre es: ${reservation.name}.\nMi WhatsApp es: ${reservation.whatsapp}.\nAdjunto el comprobante de pago.`;
+     const message = `Hola, adjunto el comprobante de pago de mi reserva.\nNúmeros reservados: ${reservation.numbers.join(", ")}.`;
 
       const url = `https://wa.me/${adminWhatsapp}?text=${encodeURIComponent(message)}`;
       window.open(url, "_blank", "noopener,noreferrer");
