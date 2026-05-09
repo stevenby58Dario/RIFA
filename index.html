@@ -277,6 +277,48 @@
       background: #fbfcfc;
     }
 
+.floating-reserve-bar {
+  position: sticky;
+  bottom: 14px;
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  background: #111827;
+  color: #ffffff;
+  border-radius: 16px;
+  padding: 12px;
+  margin: 14px 0;
+  box-shadow: 0 10px 30px rgba(17, 24, 39, 0.25);
+}
+
+.floating-reserve-bar div {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  font-size: 0.85rem;
+}
+
+.floating-reserve-bar strong {
+  font-size: 0.95rem;
+}
+
+.floating-reserve-bar button {
+  border: 0;
+  border-radius: 12px;
+  background: #16a34a;
+  color: #ffffff;
+  font-weight: bold;
+  padding: 11px 14px;
+  cursor: pointer;
+  white-space: nowrap;
+}
+
+.floating-reserve-bar.hidden {
+  display: none;
+}
+    
     .hidden {
       display: none;
     }
@@ -318,13 +360,14 @@
       <div id="numberGrid" class="number-grid"></div>
     </section>
 
-    <section class="card">
-  <h2>Tu selección</h2>
-  <div id="selectedList" class="selected-list">Números seleccionados: ninguno</div>
-
-  <button id="continueButton" class="button hidden" type="button">Continuar con la reserva</button>
-</section>
-
+<div id="floatingReserveBar" class="floating-reserve-bar hidden">
+  <div>
+    <strong id="floatingSelectedText">0 números seleccionados</strong>
+    <span>Continúa para completar tus datos</span>
+  </div>
+  <button id="continueButton" type="button">Continuar reserva</button>
+</div>
+    
 <section id="buyerSection" class="card hidden">
   <h2>Datos para la reserva</h2>
 
@@ -373,7 +416,8 @@
       image: document.getElementById("raffleImage"),
       priceBox: document.getElementById("priceBox"),
       grid: document.getElementById("numberGrid"),
-      selectedList: document.getElementById("selectedList"),
+     floatingReserveBar: document.getElementById("floatingReserveBar"),
+floatingSelectedText: document.getElementById("floatingSelectedText"),
 continueButton: document.getElementById("continueButton"),
 buyerSection: document.getElementById("buyerSection"),
 buyerName: document.getElementById("buyerName"),
@@ -515,14 +559,15 @@ reserveButton: document.getElementById("reserveButton"),
     function renderSelectedList() {
   const selected = getSelectedNumbers();
 
-  els.selectedList.textContent = selected.length
-    ? `Números seleccionados: ${selected.join(", ")}`
-    : "Números seleccionados: ninguno";
-
   if (selected.length) {
-    els.continueButton.classList.remove("hidden");
+    els.floatingSelectedText.textContent =
+      selected.length === 1
+        ? `1 número seleccionado: ${selected.join(", ")}`
+        : `${selected.length} números seleccionados: ${selected.join(", ")}`;
+
+    els.floatingReserveBar.classList.remove("hidden");
   } else {
-    els.continueButton.classList.add("hidden");
+    els.floatingReserveBar.classList.add("hidden");
     els.buyerSection.classList.add("hidden");
   }
 }
@@ -645,7 +690,7 @@ function showBuyerSection() {
 
       renderPaymentAccounts();
       els.buyerSection.classList.add("hidden");
-els.continueButton.classList.add("hidden");
+els.floatingReserveBar.classList.add("hidden");
 els.finalSection.classList.remove("hidden");
 els.finalSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
@@ -684,7 +729,7 @@ els.finalSection.scrollIntoView({ behavior: "smooth", block: "start" });
   els.buyerName.value = "";
   els.buyerWhatsapp.value = "";
   els.buyerSection.classList.add("hidden");
-  els.continueButton.classList.add("hidden");
+  els.floatingReserveBar.classList.add("hidden");
   els.finalSection.classList.add("hidden");
   renderNumbers();
   renderSelectedList();
