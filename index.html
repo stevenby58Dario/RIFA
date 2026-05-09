@@ -6,21 +6,27 @@
   <title>Rifa</title>
   <style>
     :root {
-      --bg: #f6f8f7;
-      --card: #ffffff;
-      --text: #1f2933;
-      --muted: #667085;
-      --line: #d9e2df;
-      --available: #ffffff;
-      --available-border: #9cc9b3;
-      --unavailable: #d6dadd;
-      --selected: #2eaf6d;
-      --selected-text: #ffffff;
-      --primary: #24895a;
-      --primary-dark: #1d704a;
-      --danger: #b42318;
-      --soft: #eef8f2;
-    }
+  --bg: #f2f3f5;
+  --card: #ffffff;
+  --text: #111827;
+  --muted: #4b5563;
+  --line: #d1d5db;
+
+  --available: #ffffff;
+  --available-border: #111827;
+
+  --unavailable: #d1d5db;
+  --unavailable-text: #6b7280;
+
+  --selected: #16a34a;
+  --selected-text: #ffffff;
+
+  --primary: #111827;
+  --primary-dark: #000000;
+
+  --danger: #b42318;
+  --soft: #f3f4f6;
+}
 
     * {
       box-sizing: border-box;
@@ -42,21 +48,24 @@
     }
 
     .card {
-      background: var(--card);
-      border: 1px solid var(--line);
-      border-radius: 16px;
-      padding: 16px;
-      margin-bottom: 14px;
-    }
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 18px;
+  padding: 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 8px 24px rgba(17, 24, 39, 0.06);
+}
 
     .header {
       text-align: center;
     }
 
     h1 {
-      margin: 8px 0 6px;
-      font-size: 1.7rem;
-    }
+  margin: 8px 0 8px;
+  font-size: 1.9rem;
+  color: #111827;
+  letter-spacing: -0.5px;
+}
 
     h2 {
       margin: 0 0 10px;
@@ -105,15 +114,15 @@
     }
 
     .price-box {
-      background: var(--soft);
-      border: 1px solid #ccebd9;
-      border-radius: 12px;
-      padding: 10px;
-      text-align: center;
-      font-weight: bold;
-      color: var(--primary-dark);
-      margin-top: 12px;
-    }
+  background: #111827;
+  border: 1px solid #111827;
+  border-radius: 14px;
+  padding: 12px;
+  text-align: center;
+  font-weight: bold;
+  color: #ffffff;
+  margin-top: 14px;
+}
 
     .legend {
       display: flex;
@@ -152,40 +161,44 @@
     }
 
     .number-grid {
-      display: grid;
-      grid-template-columns: repeat(5, 1fr);
-      gap: 8px;
-    }
+  display: grid;
+  grid-template-columns: repeat(5, 1fr);
+  gap: 10px;
+  margin-top: 12px;
+}
 
     .number-button {
-      min-height: 46px;
-      border-radius: 10px;
-      border: 1px solid var(--available-border);
-      background: var(--available);
-      color: var(--text);
-      font-weight: bold;
-      font-size: 1rem;
-      cursor: pointer;
-      touch-action: manipulation;
-    }
+  min-height: 52px;
+  border-radius: 12px;
+  border: 2px solid #111827;
+  background: #ffffff;
+  color: #111827;
+  font-weight: 800;
+  font-size: 1.05rem;
+  cursor: pointer;
+  touch-action: manipulation;
+  box-shadow: 0 3px 0 #111827;
+}
 
     .number-button:active {
       transform: scale(0.98);
     }
 
     .number-button.unavailable {
-      background: var(--unavailable);
-      border-color: #c4c9cc;
-      color: #6b7280;
-      cursor: not-allowed;
-      text-decoration: line-through;
-    }
+  background: #d1d5db;
+  border-color: #9ca3af;
+  color: #6b7280;
+  cursor: not-allowed;
+  text-decoration: line-through;
+  box-shadow: none;
+}
 
     .number-button.selected {
-      background: var(--selected);
-      border-color: var(--selected);
-      color: var(--selected-text);
-    }
+  background: var(--selected);
+  border-color: #0f7a36;
+  color: var(--selected-text);
+  box-shadow: 0 3px 0 #0f7a36;
+}
 
     .selected-list {
       min-height: 40px;
@@ -306,17 +319,23 @@
     </section>
 
     <section class="card">
-      <h2>Tu selección</h2>
-      <div id="selectedList" class="selected-list">Números seleccionados: ninguno</div>
+  <h2>Tu selección</h2>
+  <div id="selectedList" class="selected-list">Números seleccionados: ninguno</div>
 
-      <label for="buyerName">Nombre y apellido</label>
-      <input id="buyerName" type="text" autocomplete="name" placeholder="Ejemplo: Juan Pérez" />
+  <button id="continueButton" class="button hidden" type="button">Continuar con la reserva</button>
+</section>
 
-      <label for="buyerWhatsapp">WhatsApp</label>
-      <input id="buyerWhatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ejemplo: 0994827767" />
+<section id="buyerSection" class="card hidden">
+  <h2>Datos para la reserva</h2>
 
-      <button id="reserveButton" class="button" type="button">Confirmar reserva</button>
-    </section>
+  <label for="buyerName">Nombre y apellido</label>
+  <input id="buyerName" type="text" autocomplete="name" placeholder="Ejemplo: Juan Pérez" />
+
+  <label for="buyerWhatsapp">WhatsApp</label>
+  <input id="buyerWhatsapp" type="tel" inputmode="tel" autocomplete="tel" placeholder="Ejemplo: 0994827767" />
+
+  <button id="reserveButton" class="button" type="button">Confirmar reserva</button>
+</section>
 
     <section id="finalSection" class="card hidden">
       <h2>Reserva registrada</h2>
@@ -355,9 +374,11 @@
       priceBox: document.getElementById("priceBox"),
       grid: document.getElementById("numberGrid"),
       selectedList: document.getElementById("selectedList"),
-      buyerName: document.getElementById("buyerName"),
-      buyerWhatsapp: document.getElementById("buyerWhatsapp"),
-      reserveButton: document.getElementById("reserveButton"),
+continueButton: document.getElementById("continueButton"),
+buyerSection: document.getElementById("buyerSection"),
+buyerName: document.getElementById("buyerName"),
+buyerWhatsapp: document.getElementById("buyerWhatsapp"),
+reserveButton: document.getElementById("reserveButton"),
       finalSection: document.getElementById("finalSection"),
       reservationSummary: document.getElementById("reservationSummary"),
       paymentAccounts: document.getElementById("paymentAccounts"),
@@ -368,13 +389,13 @@
     document.addEventListener("DOMContentLoaded", init);
 
     function init() {
-      loadFromCache();
-      fetchFreshData();
-      els.reserveButton.addEventListener("click", reserveSelectedNumbers);
-      els.whatsappButton.addEventListener("click", openWhatsappProof);
-      els.newReservationButton.addEventListener("click", resetFormForNewReservation);
-    }
-
+  loadFromCache();
+  fetchFreshData();
+  els.continueButton.addEventListener("click", showBuyerSection);
+  els.reserveButton.addEventListener("click", reserveSelectedNumbers);
+  els.whatsappButton.addEventListener("click", openWhatsappProof);
+  els.newReservationButton.addEventListener("click", resetFormForNewReservation);
+}
     function showStatus(message, type = "info") {
       els.status.textContent = message;
       els.status.className = "status show" + (type === "error" ? " error" : "");
@@ -485,11 +506,24 @@
     }
 
     function renderSelectedList() {
-      const selected = getSelectedNumbers();
-      els.selectedList.textContent = selected.length
-        ? `Números seleccionados: ${selected.join(", ")}`
-        : "Números seleccionados: ninguno";
-    }
+  const selected = getSelectedNumbers();
+
+  els.selectedList.textContent = selected.length
+    ? `Números seleccionados: ${selected.join(", ")}`
+    : "Números seleccionados: ninguno";
+
+  if (selected.length) {
+    els.continueButton.classList.remove("hidden");
+  } else {
+    els.continueButton.classList.add("hidden");
+    els.buyerSection.classList.add("hidden");
+  }
+}
+
+function showBuyerSection() {
+  els.buyerSection.classList.remove("hidden");
+  els.buyerSection.scrollIntoView({ behavior: "smooth", block: "start" });
+}
 
     function getSelectedNumbers() {
       return Array.from(state.selected).sort((a, b) => Number(a) - Number(b));
@@ -603,8 +637,10 @@
       `;
 
       renderPaymentAccounts();
-      els.finalSection.classList.remove("hidden");
-      els.finalSection.scrollIntoView({ behavior: "smooth", block: "start" });
+      els.buyerSection.classList.add("hidden");
+els.continueButton.classList.add("hidden");
+els.finalSection.classList.remove("hidden");
+els.finalSection.scrollIntoView({ behavior: "smooth", block: "start" });
     }
 
     function renderPaymentAccounts() {
@@ -636,15 +672,17 @@
     }
 
     function resetFormForNewReservation() {
-      state.lastReservation = null;
-      state.selected.clear();
-      els.buyerName.value = "";
-      els.buyerWhatsapp.value = "";
-      els.finalSection.classList.add("hidden");
-      renderNumbers();
-      renderSelectedList();
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
+  state.lastReservation = null;
+  state.selected.clear();
+  els.buyerName.value = "";
+  els.buyerWhatsapp.value = "";
+  els.buyerSection.classList.add("hidden");
+  els.continueButton.classList.add("hidden");
+  els.finalSection.classList.add("hidden");
+  renderNumbers();
+  renderSelectedList();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
 
     function formatMoney(value) {
       return Number(value || 0).toFixed(2);
