@@ -544,7 +544,9 @@ reserveButton: document.getElementById("reserveButton"),
   <div>Precio por número: ${price} ${currency}</div>
   <small>${escapeHtml(raffleDate)}</small>
 `;
-      els.image.src = imagePath;
+      els.image.src = imagePath.startsWith("http")
+  ? imagePath
+  : new URL(imagePath, window.location.href).href;
       els.image.alt = title;
     }
 
