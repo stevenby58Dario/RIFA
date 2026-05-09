@@ -468,9 +468,16 @@ reserveButton: document.getElementById("reserveButton"),
     }
 
     function renderNumbers() {
-      els.grid.innerHTML = "";
+  els.grid.innerHTML = "";
 
-      state.numbers.forEach(item => {
+  const numbersToRender = state.numbers.length
+    ? state.numbers
+    : Array.from({ length: 100 }, (_, i) => ({
+        numero: String(i + 1).padStart(2, "0"),
+        estado: "Disponible"
+      }));
+
+  numbersToRender.forEach(item => {
         const number = String(item.numero || "").padStart(2, "0");
         const internalStatus = item.estado || "Disponible";
         const isAvailable = internalStatus === "Disponible";
